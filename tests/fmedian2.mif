@@ -1,0 +1,109 @@
+DEPTH = 16384;
+WIDTH = 32;
+ADDRESS_RADIX = HEX;
+DATA_RADIX = HEX;
+CONTENT
+BEGIN
+    [0000..00ff] : dead;
+    0040 : 00980000; --> 0100 : XOR		Zero,Zero,Zero
+    0041 : 4802880e; --> 0104 : LW		SP,StackTopVal(Zero)
+    0042 : 68f02000; --> 0108 : SW		Zero,LEDR(Zero)
+    0043 : 80100005; --> 010c : ADDI 	Zero,T0,Array
+    0044 : 48028c06; --> 0110 : LW		T1,ArrayBytesVal(Zero)
+    0045 : 00800665; --> 0114 : ADD		T1,T1,T0
+    0046 : 80001108; --> 0118 : ADDI	Zero,S1,17
+    0047 : 00980281; --> 011c : XOR		A1,S1,A0
+    0048 : 68000058; --> 0120 : SW		S1,0(T0)
+    0049 : 80000788; --> 0124 : ADDI	S1,S1,7
+    004a : 80000455; --> 0128 : ADDI	T0,T0,4
+    004b : 2cfffc56; --> 012c : BNE		T0,T1,Init
+    004c : 30006a0f; --> 0130 : CALL	ChkAsc(Zero)
+    004d : 80000f08; --> 0134 : ADDI	Zero,S1,ItNum
+    004e : 68f00008; --> 0138 : SW		S1,HEX(Zero)
+    004f : 68f02008; --> 013c : SW		S1,LEDR(Zero)
+    0050 : 80100001; --> 0140 : ADDI	Zero,A0,Array
+    0051 : 48028c02; --> 0144 : LW		A1,ArrayBytesVal(Zero)
+    0052 : 00800221; --> 0148 : ADD		A1,A1,A0
+    0053 : 3000940f; --> 014c : CALL	SortDesc(Zero)
+    0054 : 3000780f; --> 0150 : CALL	ChkDesc(Zero)
+    0055 : 80100001; --> 0154 : ADDI	Zero,A0,Array
+    0056 : 48028c02; --> 0158 : LW		A1,ArrayBytesVal(Zero)
+    0057 : 00800221; --> 015c : ADD		A1,A1,A0
+    0058 : 3000860f; --> 0160 : CALL	SortAsc(Zero)
+    0059 : 30006a0f; --> 0164 : CALL 	ChkAsc(Zero)
+    005a : 80ffff88; --> 0168 : ADDI	S1,S1,-1
+    005b : 68f00008; --> 016c : SW		S1,HEX(Zero)
+    005c : 68f02008; --> 0170 : SW		S1,LEDR(Zero)
+    005d : 2cfff280; --> 0174 : BNE		S1,Zero,MainLoop
+    005e : 8002aa05; --> 0178 : ADDI	Zero,T0,Done
+    005f : 68f02005; --> 017c : SW		T0,LEDR(Zero)
+    0060 : 80100001; --> 0180 : ADDI	Zero,A0,Array
+    0061 : 48028c02; --> 0184 : LW		A1,ArrayBytesVal(Zero)
+    0062 : 80000105; --> 0188 : ADDI	Zero,T0,1
+    0063 : 00c00225; --> 018c : RSHF	A1,A1,T0
+    0064 : 00800221; --> 0190 : ADD		A1,A1,A0
+    0065 : 48000025; --> 0194 : LW		T0,0(A1)
+    0066 : 68f00005; --> 0198 : SW		T0,HEX(Zero)
+    0067 : 8002aa06; --> 019c : ADDI	Zero,T1,Done
+    0068 : 68f02006; --> 01a0 : SW		T1,LEDR(Zero)
+    0069 : 3000690a; --> 01a4 : JMP		Forever(Zero)
+    006a : 80100001; --> 01a8 : ADDI	Zero,A0,Array
+    006b : 48028c02; --> 01ac : LW		A1,ArrayBytesVal(Zero)
+    006c : 00800221; --> 01b0 : ADD		A1,A1,A0
+    006d : 80001103; --> 01b4 : ADDI	Zero,A2,17
+    006e : 48000015; --> 01b8 : LW		T0,0(A0)
+    006f : 20000453; --> 01bc : BEQ		T0,A2,GoodChkAsc
+    0070 : 68f00005; --> 01c0 : SW		T0,HEX(Zero)
+    0071 : 8003e006; --> 01c4 : ADDI	Zero,T1,ErrAsc
+    0072 : 68f02006; --> 01c8 : SW		T1,LEDR(Zero)
+    0073 : 3000700a; --> 01cc : JMP		ErrChkAsc(Zero)
+    0074 : 80000733; --> 01d0 : ADDI	A2,A2,7
+    0075 : 80000411; --> 01d4 : ADDI	A0,A0,4
+    0076 : 2cfff712; --> 01d8 : BNE		A0,A1,LoopChkAsc
+    0077 : 300000fa; --> 01dc : RET
+    0078 : 80100002; --> 01e0 : ADDI	Zero,A1,Array
+    0079 : 48028c01; --> 01e4 : LW		A0,ArrayBytesVal(Zero)
+    007a : 00800112; --> 01e8 : ADD		A0,A0,A1
+    007b : 80001103; --> 01ec : ADDI	Zero,A2,17
+    007c : 80fffc11; --> 01f0 : SUBI	A0,A0,4
+    007d : 48000016; --> 01f4 : LW		T1,0(A0)
+    007e : 20000436; --> 01f8 : BEQ		A2,T1,GoodChkDesc
+    007f : 68f00006; --> 01fc : SW		T1,HEX(Zero)
+    0080 : 80001f05; --> 0200 : ADDI	Zero,T0,ErrDes
+    0081 : 68f02005; --> 0204 : SW		T0,LEDR(Zero)
+    0082 : 30007f0a; --> 0208 : JMP		ErrChkDesc(Zero)
+    0083 : 80000733; --> 020c : ADDI	A2,A2,7
+    0084 : 2cfff721; --> 0210 : BNE		A1,A0,LoopChkDesc
+    0085 : 300000fa; --> 0214 : RET
+    0086 : 20000c12; --> 0218 : BEQ   A0,A1,SortAscEndI
+    0087 : 48000015; --> 021c : LW		T0,0(A0)
+    0088 : 80000413; --> 0220 : ADDI  A0,A2,4
+    0089 : 20000632; --> 0224 : BEQ   A2,A1,SortAscEndJ
+    008a : 48000036; --> 0228 : LW		T1,0(A2)
+    008b : 28000256; --> 022c : BLE		T0,T1,SortAscNoSwap
+    008c : 68000035; --> 0230 : SW		T0,0(A2)
+    008d : 00800567; --> 0234 : ADD		T0,T1,S0
+    008e : 80000433; --> 0238 : ADDI	A2,A2,4
+    008f : 3000890a; --> 023c : JMP		SortAscLoopJ(Zero)
+    0090 : 68000015; --> 0240 : SW		T0,0(A0)
+    0091 : 80000411; --> 0244 : ADDI	A0,A0,4
+    0092 : 3000860a; --> 0248 : JMP		SortAscLoopI(Zero)
+    0093 : 300000fa; --> 024c : RET
+    0094 : 80000015; --> 0250 : ADDI	A0,T0,0
+    0095 : 20000b52; --> 0254 : BEQ     T0,A1,SortDescEndI
+    0096 : 80000456; --> 0258 : ADDI    T0,T1,4
+    0097 : 20000762; --> 025c : BEQ   T1,A1,SortDescEndJ
+    0098 : 48000053; --> 0260 : LW		A2,0(T0)
+    0099 : 48000064; --> 0264 : LW		A3,0(T1)
+    009a : 28000243; --> 0268 : BGE		A2,A3,SortDescNoSwap
+    009b : 68000063; --> 026c : SW		A2,0(T1)
+    009c : 68000054; --> 0270 : SW		A3,0(T0)
+    009d : 80000466; --> 0274 : ADDI	T1,T1,4
+    009e : 3000970a; --> 0278 : JMP		SortDescLoopJ(Zero)
+    009f : 80000455; --> 027c : ADDI	T0,T0,4
+    00a0 : 3000950a; --> 0280 : JMP		SortDescLoopI(Zero)
+    00a1 : 300000fa; --> 0284 : RET
+    00a2 : 00010000; --> 0288 : .WORD StkTop
+    00a3 : 00004000; --> 028c : .WORD ArrayBytes
+    [00a4..3fff] : dead;
+END;
